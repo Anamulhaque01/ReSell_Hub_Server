@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import authRoutes from "./routes/authRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 
 
 dotenv.config();
@@ -23,6 +24,11 @@ app.use(
 app.use(
     "/api/products",
     productRoutes
+);
+
+app.use(
+    "/api/orders",
+    orderRoutes
 );
 
 

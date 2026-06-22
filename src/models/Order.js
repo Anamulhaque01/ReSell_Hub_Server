@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 
 const orderSchema = new mongoose.Schema(
+
     {
 
         buyer: {
@@ -25,44 +26,65 @@ const orderSchema = new mongoose.Schema(
         },
 
 
+        quantity: {
+            type: Number,
+            default: 1
+        },
+
+
+        totalPrice: {
+            type: Number,
+            required: true
+        },
+
+
+        shippingAddress: {
+            type: String,
+            required: true
+        },
+
+
         paymentStatus: {
             type: String,
+
             enum: [
                 "pending",
                 "paid",
                 "failed"
             ],
+
             default: "pending"
         },
 
 
         orderStatus: {
             type: String,
+
             enum: [
-                "Pending",
-                "Accepted",
-                "Processing",
-                "Shipped",
-                "Delivered",
-                "Cancelled"
+                "pending",
+                "confirmed",
+                "shipped",
+                "delivered",
+                "cancelled"
             ],
-            default: "Pending"
-        },
 
-
-        amount: {
-            type: Number,
-            required: true
+            default: "pending"
         }
 
 
     },
+
     {
         timestamps: true
-    });
+    }
 
 
-export const Order = mongoose.model(
-    "Order",
-    orderSchema
 );
+
+
+
+export const Order =
+    mongoose.model(
+        "Order",
+        orderSchema
+    );
