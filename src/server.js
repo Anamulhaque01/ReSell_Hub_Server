@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
 import authRoutes from "./routes/authRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
 
 
 dotenv.config();
@@ -17,6 +18,11 @@ app.use(express.json());
 app.use(
     "/api/auth",
     authRoutes
+);
+
+app.use(
+    "/api/products",
+    productRoutes
 );
 
 
