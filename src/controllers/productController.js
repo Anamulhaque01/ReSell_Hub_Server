@@ -122,26 +122,150 @@ export const getAllProducts = async (req, res) => {
 
     try {
 
-        const products = await Product.find()
+        const {
+            search,
+            category,
+            condition,
+            minPrice,
+            maxPrice,
+            sort
+        } = req.query;
+
+
+
+        let filter = {};
+
+
+
+        // Search by title or description
+
+        if (search) {
+
+            filter.$or = [
+
+                {
+                    title: {
+                        $regex: search,
+                        $options: "i"
+                    }
+                },
+
+                {
+                    description: {
+                        $regex: search,
+                        $options: "i"
+                    }
+                }
+
+            ];
+
+        }
+
+
+
+        // Category filter
+
+        if (category) {
+
+            filter.category = category;
+
+        }
+
+
+
+        // Condition filter
+
+        if (condition) {
+
+            filter.condition = condition;
+
+        }
+
+
+
+        // Price filter
+
+        if (minPrice || maxPrice) {
+
+            filter.price = {};
+
+            if (minPrice) {
+
+                filter.price.$gte = Number(minPrice);
+
+            }
+
+
+            if (maxPrice) {
+
+                filter.price.$lte = Number(maxPrice);
+
+            }
+
+        }
+
+
+
+        let query = Product.find(filter)
             .populate(
                 "seller",
                 "name email photo"
-            )
-            .sort({
+            );
+
+
+
+        // Sorting
+
+        if (sort === "price_low") {
+
+            query = query.sort({
+                price: 1
+            });
+
+        }
+
+
+        else if (sort === "price_high") {
+
+            query = query.sort({
+                price: -1
+            });
+
+        }
+
+
+        else {
+
+            query = query.sort({
                 createdAt: -1
             });
 
+        }
+
+
+
+        const products = await query;
+
+
 
         res.status(200).json({
+
+            count: products.length,
+
             products
+
         });
 
 
+
     }
+
     catch (error) {
 
         res.status(500).json({
+
             message: error.message
+
         });
 
     }
